@@ -208,7 +208,7 @@ impl Image {
         ListRef::new(self.shared().clone(), format!("{}.cmd", self.extract_ref()))
     }
 
-    #[doc= "Get a reference to the value of field `dest` after provisioning.\nWhere to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list"]
+    #[doc= "Get a reference to the value of field `dest` after provisioning.\nWhere to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
     pub fn dest(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.dest", self.extract_ref()))
     }
@@ -248,7 +248,7 @@ impl Image {
         PrimExpr::new(self.shared().clone(), format!("{}.from_user", self.extract_ref()))
     }
 
-    #[doc= "Get a reference to the value of field `hash` after provisioning.\nHash of the pushed image in a format `algo:hex` like `sha256:0123abcd...`"]
+    #[doc= "Get a reference to the value of field `hash` after provisioning.\nAddressable content hash of the pushed image manifest in a format `algo:hex` like `sha256:0123abcd...`"]
     pub fn hash(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.hash", self.extract_ref()))
     }
@@ -261,6 +261,11 @@ impl Image {
     #[doc= "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
     pub fn ports(&self) -> ListRef<ImagePortsElRef> {
         ListRef::new(self.shared().clone(), format!("{}.ports", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `rendered_dest` after provisioning.\n`dest` after interpolating generated information."]
+    pub fn rendered_dest(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.rendered_dest", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `stop_signal` after provisioning.\nSignal to use to stop command in container when shutting down"]
@@ -310,7 +315,7 @@ impl Resource_ for Image_ {
 
 pub struct BuildImage {
     pub tf_id: String,
-    #[doc= "Where to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list"]
+    #[doc= "Where to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
     pub dest: PrimField<String>,
     #[doc= "Files to add to image"]
     pub files: Vec<ImageFilesEl>,
@@ -389,7 +394,7 @@ impl ImageRef {
         ListRef::new(self.shared().clone(), format!("{}.cmd", self.extract_ref()))
     }
 
-    #[doc= "Get a reference to the value of field `dest` after provisioning.\nWhere to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list"]
+    #[doc= "Get a reference to the value of field `dest` after provisioning.\nWhere to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
     pub fn dest(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.dest", self.extract_ref()))
     }
@@ -429,7 +434,7 @@ impl ImageRef {
         PrimExpr::new(self.shared().clone(), format!("{}.from_user", self.extract_ref()))
     }
 
-    #[doc= "Get a reference to the value of field `hash` after provisioning.\nHash of the pushed image in a format `algo:hex` like `sha256:0123abcd...`"]
+    #[doc= "Get a reference to the value of field `hash` after provisioning.\nAddressable content hash of the pushed image manifest in a format `algo:hex` like `sha256:0123abcd...`"]
     pub fn hash(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.hash", self.extract_ref()))
     }
@@ -442,6 +447,11 @@ impl ImageRef {
     #[doc= "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
     pub fn ports(&self) -> ListRef<ImagePortsElRef> {
         ListRef::new(self.shared().clone(), format!("{}.ports", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `rendered_dest` after provisioning.\n`dest` after interpolating generated information."]
+    pub fn rendered_dest(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.rendered_dest", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `stop_signal` after provisioning.\nSignal to use to stop command in container when shutting down"]
