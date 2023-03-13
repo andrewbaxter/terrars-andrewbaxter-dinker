@@ -17,10 +17,14 @@ struct ImageData {
     #[serde(skip_serializing_if = "Option::is_none")]
     add_env: Option<RecField<PrimField<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    arch: Option<ListField<PrimField<String>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     clear_env: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     cmd: Option<ListField<PrimField<String>>>,
     dest: PrimField<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    dest_http: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     dest_password: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -28,13 +32,18 @@ struct ImageData {
     #[serde(skip_serializing_if = "Option::is_none")]
     entrypoint: Option<ListField<PrimField<String>>>,
     files: Vec<ImageFilesEl>,
-    from: PrimField<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    from: Option<PrimField<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    from_http: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     from_password: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     from_user: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     labels: Option<RecField<PrimField<String>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    os: Option<ListField<PrimField<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     ports: Option<Vec<ImagePortsEl>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -121,6 +130,12 @@ impl Image {
         self
     }
 
+    #[doc= "Set the field `arch`.\nDefaults to `from` image architecture. Required if `from` omitted."]
+    pub fn set_arch(self, v: impl Into<ListField<PrimField<String>>>) -> Self {
+        self.0.data.borrow_mut().arch = Some(v.into());
+        self
+    }
+
     #[doc= "Set the field `clear_env`.\nUser to use if pushing generated image to remote"]
     pub fn set_clear_env(self, v: impl Into<PrimField<bool>>) -> Self {
         self.0.data.borrow_mut().clear_env = Some(v.into());
@@ -130,6 +145,12 @@ impl Image {
     #[doc= "Set the field `cmd`.\nOverridable command parts, concatenated after `entrypoint`"]
     pub fn set_cmd(self, v: impl Into<ListField<PrimField<String>>>) -> Self {
         self.0.data.borrow_mut().cmd = Some(v.into());
+        self
+    }
+
+    #[doc= "Set the field `dest_http`.\nAllow http and unverified SSL"]
+    pub fn set_dest_http(self, v: impl Into<PrimField<bool>>) -> Self {
+        self.0.data.borrow_mut().dest_http = Some(v.into());
         self
     }
 
@@ -151,6 +172,18 @@ impl Image {
         self
     }
 
+    #[doc= "Set the field `from`.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
+    pub fn set_from(self, v: impl Into<PrimField<String>>) -> Self {
+        self.0.data.borrow_mut().from = Some(v.into());
+        self
+    }
+
+    #[doc= "Set the field `from_http`.\nAllow http and unverified SSL"]
+    pub fn set_from_http(self, v: impl Into<PrimField<bool>>) -> Self {
+        self.0.data.borrow_mut().from_http = Some(v.into());
+        self
+    }
+
     #[doc= "Set the field `from_password`.\nPassword to use if pulling FROM image from remote"]
     pub fn set_from_password(self, v: impl Into<PrimField<String>>) -> Self {
         self.0.data.borrow_mut().from_password = Some(v.into());
@@ -166,6 +199,12 @@ impl Image {
     #[doc= "Set the field `labels`.\nMetadata to attach to image"]
     pub fn set_labels(self, v: impl Into<RecField<PrimField<String>>>) -> Self {
         self.0.data.borrow_mut().labels = Some(v.into());
+        self
+    }
+
+    #[doc= "Set the field `os`.\nDefaults to `from` image os. Required if `from` omitted."]
+    pub fn set_os(self, v: impl Into<ListField<PrimField<String>>>) -> Self {
+        self.0.data.borrow_mut().os = Some(v.into());
         self
     }
 
@@ -198,6 +237,11 @@ impl Image {
         RecRef::new(self.shared().clone(), format!("{}.add_env", self.extract_ref()))
     }
 
+    #[doc= "Get a reference to the value of field `arch` after provisioning.\nDefaults to `from` image architecture. Required if `from` omitted."]
+    pub fn arch(&self) -> ListRef<PrimExpr<String>> {
+        ListRef::new(self.shared().clone(), format!("{}.arch", self.extract_ref()))
+    }
+
     #[doc= "Get a reference to the value of field `clear_env` after provisioning.\nUser to use if pushing generated image to remote"]
     pub fn clear_env(&self) -> PrimExpr<bool> {
         PrimExpr::new(self.shared().clone(), format!("{}.clear_env", self.extract_ref()))
@@ -211,6 +255,11 @@ impl Image {
     #[doc= "Get a reference to the value of field `dest` after provisioning.\nWhere to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
     pub fn dest(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.dest", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `dest_http` after provisioning.\nAllow http and unverified SSL"]
+    pub fn dest_http(&self) -> PrimExpr<bool> {
+        PrimExpr::new(self.shared().clone(), format!("{}.dest_http", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `dest_password` after provisioning.\nPassword to use if pushing generated image to remote"]
@@ -233,9 +282,14 @@ impl Image {
         ListRef::new(self.shared().clone(), format!("{}.files", self.extract_ref()))
     }
 
-    #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list"]
+    #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
     pub fn from(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.from", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `from_http` after provisioning.\nAllow http and unverified SSL"]
+    pub fn from_http(&self) -> PrimExpr<bool> {
+        PrimExpr::new(self.shared().clone(), format!("{}.from_http", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `from_password` after provisioning.\nPassword to use if pulling FROM image from remote"]
@@ -256,6 +310,11 @@ impl Image {
     #[doc= "Get a reference to the value of field `labels` after provisioning.\nMetadata to attach to image"]
     pub fn labels(&self) -> RecRef<PrimExpr<String>> {
         RecRef::new(self.shared().clone(), format!("{}.labels", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `os` after provisioning.\nDefaults to `from` image os. Required if `from` omitted."]
+    pub fn os(&self) -> ListRef<PrimExpr<String>> {
+        ListRef::new(self.shared().clone(), format!("{}.os", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
@@ -321,8 +380,6 @@ pub struct BuildImage {
     pub dest: PrimField<String>,
     #[doc= "Files to add to image"]
     pub files: Vec<ImageFilesEl>,
-    #[doc= "FROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list"]
-    pub from: PrimField<String>,
 }
 
 impl BuildImage {
@@ -336,17 +393,21 @@ impl BuildImage {
                 lifecycle: core::default::Default::default(),
                 for_each: None,
                 add_env: core::default::Default::default(),
+                arch: core::default::Default::default(),
                 clear_env: core::default::Default::default(),
                 cmd: core::default::Default::default(),
                 dest: self.dest,
+                dest_http: core::default::Default::default(),
                 dest_password: core::default::Default::default(),
                 dest_user: core::default::Default::default(),
                 entrypoint: core::default::Default::default(),
                 files: self.files,
-                from: self.from,
+                from: core::default::Default::default(),
+                from_http: core::default::Default::default(),
                 from_password: core::default::Default::default(),
                 from_user: core::default::Default::default(),
                 labels: core::default::Default::default(),
+                os: core::default::Default::default(),
                 ports: core::default::Default::default(),
                 stop_signal: core::default::Default::default(),
                 user: core::default::Default::default(),
@@ -386,6 +447,11 @@ impl ImageRef {
         RecRef::new(self.shared().clone(), format!("{}.add_env", self.extract_ref()))
     }
 
+    #[doc= "Get a reference to the value of field `arch` after provisioning.\nDefaults to `from` image architecture. Required if `from` omitted."]
+    pub fn arch(&self) -> ListRef<PrimExpr<String>> {
+        ListRef::new(self.shared().clone(), format!("{}.arch", self.extract_ref()))
+    }
+
     #[doc= "Get a reference to the value of field `clear_env` after provisioning.\nUser to use if pushing generated image to remote"]
     pub fn clear_env(&self) -> PrimExpr<bool> {
         PrimExpr::new(self.shared().clone(), format!("{}.clear_env", self.extract_ref()))
@@ -399,6 +465,11 @@ impl ImageRef {
     #[doc= "Get a reference to the value of field `dest` after provisioning.\nWhere to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
     pub fn dest(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.dest", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `dest_http` after provisioning.\nAllow http and unverified SSL"]
+    pub fn dest_http(&self) -> PrimExpr<bool> {
+        PrimExpr::new(self.shared().clone(), format!("{}.dest_http", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `dest_password` after provisioning.\nPassword to use if pushing generated image to remote"]
@@ -421,9 +492,14 @@ impl ImageRef {
         ListRef::new(self.shared().clone(), format!("{}.files", self.extract_ref()))
     }
 
-    #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list"]
+    #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
     pub fn from(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.from", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `from_http` after provisioning.\nAllow http and unverified SSL"]
+    pub fn from_http(&self) -> PrimExpr<bool> {
+        PrimExpr::new(self.shared().clone(), format!("{}.from_http", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `from_password` after provisioning.\nPassword to use if pulling FROM image from remote"]
@@ -444,6 +520,11 @@ impl ImageRef {
     #[doc= "Get a reference to the value of field `labels` after provisioning.\nMetadata to attach to image"]
     pub fn labels(&self) -> RecRef<PrimExpr<String>> {
         RecRef::new(self.shared().clone(), format!("{}.labels", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `os` after provisioning.\nDefaults to `from` image os. Required if `from` omitted."]
+    pub fn os(&self) -> ListRef<PrimExpr<String>> {
+        ListRef::new(self.shared().clone(), format!("{}.os", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
