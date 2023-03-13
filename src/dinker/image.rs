@@ -17,7 +17,7 @@ struct ImageData {
     #[serde(skip_serializing_if = "Option::is_none")]
     add_env: Option<RecField<PrimField<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    arch: Option<ListField<PrimField<String>>>,
+    arch: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     clear_env: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -43,7 +43,7 @@ struct ImageData {
     #[serde(skip_serializing_if = "Option::is_none")]
     labels: Option<RecField<PrimField<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    os: Option<ListField<PrimField<String>>>,
+    os: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     ports: Option<Vec<ImagePortsEl>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -131,7 +131,7 @@ impl Image {
     }
 
     #[doc= "Set the field `arch`.\nDefaults to `from` image architecture. Required if `from` omitted."]
-    pub fn set_arch(self, v: impl Into<ListField<PrimField<String>>>) -> Self {
+    pub fn set_arch(self, v: impl Into<PrimField<String>>) -> Self {
         self.0.data.borrow_mut().arch = Some(v.into());
         self
     }
@@ -203,7 +203,7 @@ impl Image {
     }
 
     #[doc= "Set the field `os`.\nDefaults to `from` image os. Required if `from` omitted."]
-    pub fn set_os(self, v: impl Into<ListField<PrimField<String>>>) -> Self {
+    pub fn set_os(self, v: impl Into<PrimField<String>>) -> Self {
         self.0.data.borrow_mut().os = Some(v.into());
         self
     }
@@ -238,8 +238,8 @@ impl Image {
     }
 
     #[doc= "Get a reference to the value of field `arch` after provisioning.\nDefaults to `from` image architecture. Required if `from` omitted."]
-    pub fn arch(&self) -> ListRef<PrimExpr<String>> {
-        ListRef::new(self.shared().clone(), format!("{}.arch", self.extract_ref()))
+    pub fn arch(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.arch", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `clear_env` after provisioning.\nUser to use if pushing generated image to remote"]
@@ -313,8 +313,8 @@ impl Image {
     }
 
     #[doc= "Get a reference to the value of field `os` after provisioning.\nDefaults to `from` image os. Required if `from` omitted."]
-    pub fn os(&self) -> ListRef<PrimExpr<String>> {
-        ListRef::new(self.shared().clone(), format!("{}.os", self.extract_ref()))
+    pub fn os(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.os", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
@@ -448,8 +448,8 @@ impl ImageRef {
     }
 
     #[doc= "Get a reference to the value of field `arch` after provisioning.\nDefaults to `from` image architecture. Required if `from` omitted."]
-    pub fn arch(&self) -> ListRef<PrimExpr<String>> {
-        ListRef::new(self.shared().clone(), format!("{}.arch", self.extract_ref()))
+    pub fn arch(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.arch", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `clear_env` after provisioning.\nUser to use if pushing generated image to remote"]
@@ -523,8 +523,8 @@ impl ImageRef {
     }
 
     #[doc= "Get a reference to the value of field `os` after provisioning.\nDefaults to `from` image os. Required if `from` omitted."]
-    pub fn os(&self) -> ListRef<PrimExpr<String>> {
-        ListRef::new(self.shared().clone(), format!("{}.os", self.extract_ref()))
+    pub fn os(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.os", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
