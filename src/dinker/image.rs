@@ -24,7 +24,7 @@ struct ImageData {
     cmd: Option<ListField<PrimField<String>>>,
     dest: PrimField<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    dest_host: Option<PrimField<bool>>,
+    dest_host: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     dest_http: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -37,7 +37,7 @@ struct ImageData {
     #[serde(skip_serializing_if = "Option::is_none")]
     from: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    from_host: Option<PrimField<bool>>,
+    from_host: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     from_http: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -153,7 +153,7 @@ impl Image {
     }
 
     #[doc= "Set the field `dest_host`.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
-    pub fn set_dest_host(self, v: impl Into<PrimField<bool>>) -> Self {
+    pub fn set_dest_host(self, v: impl Into<PrimField<String>>) -> Self {
         self.0.data.borrow_mut().dest_host = Some(v.into());
         self
     }
@@ -189,7 +189,7 @@ impl Image {
     }
 
     #[doc= "Set the field `from_host`.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
-    pub fn set_from_host(self, v: impl Into<PrimField<bool>>) -> Self {
+    pub fn set_from_host(self, v: impl Into<PrimField<String>>) -> Self {
         self.0.data.borrow_mut().from_host = Some(v.into());
         self
     }
@@ -274,7 +274,7 @@ impl Image {
     }
 
     #[doc= "Get a reference to the value of field `dest_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
-    pub fn dest_host(&self) -> PrimExpr<bool> {
+    pub fn dest_host(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.dest_host", self.extract_ref()))
     }
 
@@ -309,7 +309,7 @@ impl Image {
     }
 
     #[doc= "Get a reference to the value of field `from_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
-    pub fn from_host(&self) -> PrimExpr<bool> {
+    pub fn from_host(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.from_host", self.extract_ref()))
     }
 
@@ -496,7 +496,7 @@ impl ImageRef {
     }
 
     #[doc= "Get a reference to the value of field `dest_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
-    pub fn dest_host(&self) -> PrimExpr<bool> {
+    pub fn dest_host(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.dest_host", self.extract_ref()))
     }
 
@@ -531,7 +531,7 @@ impl ImageRef {
     }
 
     #[doc= "Get a reference to the value of field `from_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
-    pub fn from_host(&self) -> PrimExpr<bool> {
+    pub fn from_host(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.from_host", self.extract_ref()))
     }
 
