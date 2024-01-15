@@ -47,7 +47,7 @@ impl Provider for ProviderDinker_ {
     fn extract_provider_type(&self) -> serde_json::Value {
         serde_json::json!({
             "source": "andrewbaxter/dinker",
-            "version": "0.0.16",
+            "version": "0.0.17",
         })
     }
 

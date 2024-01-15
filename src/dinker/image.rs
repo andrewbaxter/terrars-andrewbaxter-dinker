@@ -24,6 +24,8 @@ struct ImageData {
     cmd: Option<ListField<PrimField<String>>>,
     dest: PrimField<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    dest_host: Option<PrimField<bool>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     dest_http: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     dest_password: Option<PrimField<String>>,
@@ -34,6 +36,8 @@ struct ImageData {
     files: Vec<ImageFilesEl>,
     #[serde(skip_serializing_if = "Option::is_none")]
     from: Option<PrimField<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    from_host: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     from_http: Option<PrimField<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -148,6 +152,12 @@ impl Image {
         self
     }
 
+    #[doc= "Set the field `dest_host`.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
+    pub fn set_dest_host(self, v: impl Into<PrimField<bool>>) -> Self {
+        self.0.data.borrow_mut().dest_host = Some(v.into());
+        self
+    }
+
     #[doc= "Set the field `dest_http`.\nAllow http and unverified SSL"]
     pub fn set_dest_http(self, v: impl Into<PrimField<bool>>) -> Self {
         self.0.data.borrow_mut().dest_http = Some(v.into());
@@ -175,6 +185,12 @@ impl Image {
     #[doc= "Set the field `from`.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
     pub fn set_from(self, v: impl Into<PrimField<String>>) -> Self {
         self.0.data.borrow_mut().from = Some(v.into());
+        self
+    }
+
+    #[doc= "Set the field `from_host`.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
+    pub fn set_from_host(self, v: impl Into<PrimField<bool>>) -> Self {
+        self.0.data.borrow_mut().from_host = Some(v.into());
         self
     }
 
@@ -257,6 +273,11 @@ impl Image {
         PrimExpr::new(self.shared().clone(), format!("{}.dest", self.extract_ref()))
     }
 
+    #[doc= "Get a reference to the value of field `dest_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
+    pub fn dest_host(&self) -> PrimExpr<bool> {
+        PrimExpr::new(self.shared().clone(), format!("{}.dest_host", self.extract_ref()))
+    }
+
     #[doc= "Get a reference to the value of field `dest_http` after provisioning.\nAllow http and unverified SSL"]
     pub fn dest_http(&self) -> PrimExpr<bool> {
         PrimExpr::new(self.shared().clone(), format!("{}.dest_http", self.extract_ref()))
@@ -285,6 +306,11 @@ impl Image {
     #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
     pub fn from(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.from", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `from_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
+    pub fn from_host(&self) -> PrimExpr<bool> {
+        PrimExpr::new(self.shared().clone(), format!("{}.from_host", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `from_http` after provisioning.\nAllow http and unverified SSL"]
@@ -397,12 +423,14 @@ impl BuildImage {
                 clear_env: core::default::Default::default(),
                 cmd: core::default::Default::default(),
                 dest: self.dest,
+                dest_host: core::default::Default::default(),
                 dest_http: core::default::Default::default(),
                 dest_password: core::default::Default::default(),
                 dest_user: core::default::Default::default(),
                 entrypoint: core::default::Default::default(),
                 files: self.files,
                 from: core::default::Default::default(),
+                from_host: core::default::Default::default(),
                 from_http: core::default::Default::default(),
                 from_password: core::default::Default::default(),
                 from_user: core::default::Default::default(),
@@ -467,6 +495,11 @@ impl ImageRef {
         PrimExpr::new(self.shared().clone(), format!("{}.dest", self.extract_ref()))
     }
 
+    #[doc= "Get a reference to the value of field `dest_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
+    pub fn dest_host(&self) -> PrimExpr<bool> {
+        PrimExpr::new(self.shared().clone(), format!("{}.dest_host", self.extract_ref()))
+    }
+
     #[doc= "Get a reference to the value of field `dest_http` after provisioning.\nAllow http and unverified SSL"]
     pub fn dest_http(&self) -> PrimExpr<bool> {
         PrimExpr::new(self.shared().clone(), format!("{}.dest_http", self.extract_ref()))
@@ -495,6 +528,11 @@ impl ImageRef {
     #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
     pub fn from(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.from", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `from_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
+    pub fn from_host(&self) -> PrimExpr<bool> {
+        PrimExpr::new(self.shared().clone(), format!("{}.from_host", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `from_http` after provisioning.\nAllow http and unverified SSL"]
