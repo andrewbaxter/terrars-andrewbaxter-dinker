@@ -32,10 +32,14 @@ struct ImageData {
     #[serde(skip_serializing_if = "Option::is_none")]
     dest_user: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    dirs: Option<Vec<ImageDirsEl>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     entrypoint: Option<ListField<PrimField<String>>>,
     files: Vec<ImageFilesEl>,
     #[serde(skip_serializing_if = "Option::is_none")]
     from: Option<PrimField<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    from_hash: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     from_host: Option<PrimField<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -176,15 +180,27 @@ impl Image {
         self
     }
 
+    #[doc= "Set the field `dirs`.\nDirs to create in the image. This is mostly to explicitly set the file mode of intermediate directories."]
+    pub fn set_dirs(self, v: impl Into<Vec<ImageDirsEl>>) -> Self {
+        self.0.data.borrow_mut().dirs = Some(v.into());
+        self
+    }
+
     #[doc= "Set the field `entrypoint`.\nUn-overridable command parts, concatenated before `cmd`"]
     pub fn set_entrypoint(self, v: impl Into<ListField<PrimField<String>>>) -> Self {
         self.0.data.borrow_mut().entrypoint = Some(v.into());
         self
     }
 
-    #[doc= "Set the field `from`.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
+    #[doc= "Set the field `from`.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer. This is cached and will only be downloaded once (unless the specifier changes or from_hash is explicitly set to a new value)."]
     pub fn set_from(self, v: impl Into<PrimField<String>>) -> Self {
         self.0.data.borrow_mut().from = Some(v.into());
+        self
+    }
+
+    #[doc= "Set the field `from_hash`.\nHash representing the contents of the FROM image, to force re-download even if the specifier doesn't change."]
+    pub fn set_from_hash(self, v: impl Into<PrimField<String>>) -> Self {
+        self.0.data.borrow_mut().from_hash = Some(v.into());
         self
     }
 
@@ -293,6 +309,11 @@ impl Image {
         PrimExpr::new(self.shared().clone(), format!("{}.dest_user", self.extract_ref()))
     }
 
+    #[doc= "Get a reference to the value of field `dirs` after provisioning.\nDirs to create in the image. This is mostly to explicitly set the file mode of intermediate directories."]
+    pub fn dirs(&self) -> ListRef<ImageDirsElRef> {
+        ListRef::new(self.shared().clone(), format!("{}.dirs", self.extract_ref()))
+    }
+
     #[doc= "Get a reference to the value of field `entrypoint` after provisioning.\nUn-overridable command parts, concatenated before `cmd`"]
     pub fn entrypoint(&self) -> ListRef<PrimExpr<String>> {
         ListRef::new(self.shared().clone(), format!("{}.entrypoint", self.extract_ref()))
@@ -303,9 +324,19 @@ impl Image {
         ListRef::new(self.shared().clone(), format!("{}.files", self.extract_ref()))
     }
 
-    #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
+    #[doc= "Get a reference to the value of field `files_hash` after provisioning.\nA hash of the input files, before building the image"]
+    pub fn files_hash(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.files_hash", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer. This is cached and will only be downloaded once (unless the specifier changes or from_hash is explicitly set to a new value)."]
     pub fn from(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.from", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `from_hash` after provisioning.\nHash representing the contents of the FROM image, to force re-download even if the specifier doesn't change."]
+    pub fn from_hash(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.from_hash", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `from_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
@@ -427,9 +458,11 @@ impl BuildImage {
                 dest_http: core::default::Default::default(),
                 dest_password: core::default::Default::default(),
                 dest_user: core::default::Default::default(),
+                dirs: core::default::Default::default(),
                 entrypoint: core::default::Default::default(),
                 files: self.files,
                 from: core::default::Default::default(),
+                from_hash: core::default::Default::default(),
                 from_host: core::default::Default::default(),
                 from_http: core::default::Default::default(),
                 from_password: core::default::Default::default(),
@@ -515,6 +548,11 @@ impl ImageRef {
         PrimExpr::new(self.shared().clone(), format!("{}.dest_user", self.extract_ref()))
     }
 
+    #[doc= "Get a reference to the value of field `dirs` after provisioning.\nDirs to create in the image. This is mostly to explicitly set the file mode of intermediate directories."]
+    pub fn dirs(&self) -> ListRef<ImageDirsElRef> {
+        ListRef::new(self.shared().clone(), format!("{}.dirs", self.extract_ref()))
+    }
+
     #[doc= "Get a reference to the value of field `entrypoint` after provisioning.\nUn-overridable command parts, concatenated before `cmd`"]
     pub fn entrypoint(&self) -> ListRef<PrimExpr<String>> {
         ListRef::new(self.shared().clone(), format!("{}.entrypoint", self.extract_ref()))
@@ -525,9 +563,19 @@ impl ImageRef {
         ListRef::new(self.shared().clone(), format!("{}.files", self.extract_ref()))
     }
 
-    #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer."]
+    #[doc= "Get a reference to the value of field `files_hash` after provisioning.\nA hash of the input files, before building the image"]
+    pub fn files_hash(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.files_hash", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer. This is cached and will only be downloaded once (unless the specifier changes or from_hash is explicitly set to a new value)."]
     pub fn from(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.from", self.extract_ref()))
+    }
+
+    #[doc= "Get a reference to the value of field `from_hash` after provisioning.\nHash representing the contents of the FROM image, to force re-download even if the specifier doesn't change."]
+    pub fn from_hash(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.from_hash", self.extract_ref()))
     }
 
     #[doc= "Get a reference to the value of field `from_host` after provisioning.\nOverride the docker daemon host when using the `docker-daemon` transport. Takes a URL (like `unix:///var/run/docker.sock`)"]
@@ -588,6 +636,77 @@ impl ImageRef {
     #[doc= "Get a reference to the value of field `working_dir` after provisioning.\nWorking dir for command in container; defaults to working dir in FROM image"]
     pub fn working_dir(&self) -> PrimExpr<String> {
         PrimExpr::new(self.shared().clone(), format!("{}.working_dir", self.extract_ref()))
+    }
+}
+
+#[derive(Serialize)]
+pub struct ImageDirsEl {
+    dest: PrimField<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    mode: Option<PrimField<String>>,
+}
+
+impl ImageDirsEl {
+    #[doc= "Set the field `mode`.\nFile mode in octal, defaults to 0755"]
+    pub fn set_mode(mut self, v: impl Into<PrimField<String>>) -> Self {
+        self.mode = Some(v.into());
+        self
+    }
+}
+
+impl ToListMappable for ImageDirsEl {
+    type O = BlockAssignable<ImageDirsEl>;
+
+    fn do_map(self, base: String) -> Self::O {
+        BlockAssignable::Dynamic(DynamicBlock {
+            for_each: format!("${{{}}}", base),
+            iterator: "each".into(),
+            content: self,
+        })
+    }
+}
+
+pub struct BuildImageDirsEl {
+    #[doc= "Where to create the dir in the image"]
+    pub dest: PrimField<String>,
+}
+
+impl BuildImageDirsEl {
+    pub fn build(self) -> ImageDirsEl {
+        ImageDirsEl {
+            dest: self.dest,
+            mode: core::default::Default::default(),
+        }
+    }
+}
+
+pub struct ImageDirsElRef {
+    shared: StackShared,
+    base: String,
+}
+
+impl Ref for ImageDirsElRef {
+    fn new(shared: StackShared, base: String) -> ImageDirsElRef {
+        ImageDirsElRef {
+            shared: shared,
+            base: base.to_string(),
+        }
+    }
+}
+
+impl ImageDirsElRef {
+    fn shared(&self) -> &StackShared {
+        &self.shared
+    }
+
+    #[doc= "Get a reference to the value of field `dest` after provisioning.\nWhere to create the dir in the image"]
+    pub fn dest(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.dest", self.base))
+    }
+
+    #[doc= "Get a reference to the value of field `mode` after provisioning.\nFile mode in octal, defaults to 0755"]
+    pub fn mode(&self) -> PrimExpr<String> {
+        PrimExpr::new(self.shared().clone(), format!("{}.mode", self.base))
     }
 }
 
