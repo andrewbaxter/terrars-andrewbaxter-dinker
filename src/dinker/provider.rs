@@ -1,7 +1,9 @@
+#![allow(non_camel_case_types)]
+
 use serde::Serialize;
 
 #[derive(Serialize)]
-struct ProviderDinkerData {
+struct ProviderDinkerData_ {
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     alias: std::option::Option<std::string::String>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
@@ -9,7 +11,7 @@ struct ProviderDinkerData {
 }
 
 struct ProviderDinker_ {
-    data: std::cell::RefCell<ProviderDinkerData>,
+    data: std::cell::RefCell<ProviderDinkerData_>,
 }
 
 pub struct ProviderDinker(std::rc::Rc<ProviderDinker_>);
@@ -57,10 +59,11 @@ pub struct BuildProviderDinker {}
 
 impl BuildProviderDinker {
     pub fn build(self, stack: &mut terrars::Stack) -> ProviderDinker {
-        let out = ProviderDinker(std::rc::Rc::new(ProviderDinker_ { data: std::cell::RefCell::new(ProviderDinkerData {
-            alias: std::option::Option::None,
-            cache_dir: core::default::Default::default(),
-        }) }));
+        let out =
+            ProviderDinker(std::rc::Rc::new(ProviderDinker_ { data: std::cell::RefCell::new(ProviderDinkerData_ {
+                alias: std::option::Option::None,
+                cache_dir: core::default::Default::default(),
+            }) }));
         stack.add_provider(out.0.clone());
         out
     }

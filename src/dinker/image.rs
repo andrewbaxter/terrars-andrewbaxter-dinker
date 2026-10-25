@@ -1,3 +1,5 @@
+#![allow(non_camel_case_types)]
+
 use serde::Serialize;
 use terrars::{
     Referable as _,
@@ -7,7 +9,7 @@ use terrars::{
 use super::provider::ProviderDinker;
 
 #[derive(Serialize)]
-struct ImageData {
+struct ImageData_ {
     #[serde(skip_serializing_if = "std::vec::Vec::is_empty")]
     depends_on: std::vec::Vec<std::string::String>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
@@ -36,10 +38,10 @@ struct ImageData {
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     dest_user: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
-    dirs: std::option::Option<std::vec::Vec<ImageDirsEl>>,
+    dirs: std::option::Option<std::vec::Vec<Image_Dirs>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     entrypoint: std::option::Option<terrars::ListField<terrars::PrimField<std::string::String>>>,
-    files: std::vec::Vec<ImageFilesEl>,
+    files: std::vec::Vec<Image_Files>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     from: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
@@ -57,7 +59,7 @@ struct ImageData {
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     os: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
-    ports: std::option::Option<std::vec::Vec<ImagePortsEl>>,
+    ports: std::option::Option<std::vec::Vec<Image_Ports>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     stop_signal: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
@@ -69,7 +71,7 @@ struct ImageData {
 struct Image_ {
     shared: terrars::StackShared,
     tf_id: std::string::String,
-    data: std::cell::RefCell<ImageData>,
+    data: std::cell::RefCell<ImageData_>,
 }
 
 #[derive(Clone)]
@@ -226,7 +228,7 @@ impl Image {
 
     #[doc =
         "Set the field `dirs`.\nDirs to create in the image. This is mostly to explicitly set the file mode of intermediate directories."]
-    pub fn set_dirs(self, v: impl std::convert::Into<std::vec::Vec<ImageDirsEl>>) -> Self {
+    pub fn set_dirs(self, v: impl std::convert::Into<std::vec::Vec<Image_Dirs>>) -> Self {
         self.0.data.borrow_mut().dirs = std::option::Option::Some(v.into());
         self
     }
@@ -295,7 +297,7 @@ impl Image {
     }
 
     #[doc = "Set the field `ports`.\nContainer ports to expose"]
-    pub fn set_ports(self, v: impl std::convert::Into<std::vec::Vec<ImagePortsEl>>) -> Self {
+    pub fn set_ports(self, v: impl std::convert::Into<std::vec::Vec<Image_Ports>>) -> Self {
         self.0.data.borrow_mut().ports = std::option::Option::Some(v.into());
         self
     }
@@ -373,7 +375,7 @@ impl Image {
 
     #[doc =
         "Get a reference to the value of field `dirs` after provisioning.\nDirs to create in the image. This is mostly to explicitly set the file mode of intermediate directories."]
-    pub fn dirs(&self) -> terrars::ListRef<ImageDirsElRef> {
+    pub fn dirs(&self) -> terrars::ListRef<Image_DirsRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.dirs", self.extract_ref()))
     }
 
@@ -384,7 +386,7 @@ impl Image {
     }
 
     #[doc = "Get a reference to the value of field `files` after provisioning.\nFiles to add to image"]
-    pub fn files(&self) -> terrars::ListRef<ImageFilesElRef> {
+    pub fn files(&self) -> terrars::ListRef<Image_FilesRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.files", self.extract_ref()))
     }
 
@@ -447,7 +449,7 @@ impl Image {
     }
 
     #[doc = "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
-    pub fn ports(&self) -> terrars::ListRef<ImagePortsElRef> {
+    pub fn ports(&self) -> terrars::ListRef<Image_PortsRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.ports", self.extract_ref()))
     }
 
@@ -513,7 +515,7 @@ pub struct BuildImage {
         "Where to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
     pub dest: terrars::PrimField<std::string::String>,
     #[doc = "Files to add to image"]
-    pub files: std::vec::Vec<ImageFilesEl>,
+    pub files: std::vec::Vec<Image_Files>,
 }
 
 impl BuildImage {
@@ -521,7 +523,7 @@ impl BuildImage {
         let out = Image(std::rc::Rc::new(Image_ {
             shared: stack.shared.clone(),
             tf_id: self.tf_id,
-            data: std::cell::RefCell::new(ImageData {
+            data: std::cell::RefCell::new(ImageData_ {
                 depends_on: core::default::Default::default(),
                 provider: std::option::Option::None,
                 lifecycle: core::default::Default::default(),
@@ -636,7 +638,7 @@ impl ImageRef {
 
     #[doc =
         "Get a reference to the value of field `dirs` after provisioning.\nDirs to create in the image. This is mostly to explicitly set the file mode of intermediate directories."]
-    pub fn dirs(&self) -> terrars::ListRef<ImageDirsElRef> {
+    pub fn dirs(&self) -> terrars::ListRef<Image_DirsRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.dirs", self.extract_ref()))
     }
 
@@ -647,7 +649,7 @@ impl ImageRef {
     }
 
     #[doc = "Get a reference to the value of field `files` after provisioning.\nFiles to add to image"]
-    pub fn files(&self) -> terrars::ListRef<ImageFilesElRef> {
+    pub fn files(&self) -> terrars::ListRef<Image_FilesRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.files", self.extract_ref()))
     }
 
@@ -710,7 +712,7 @@ impl ImageRef {
     }
 
     #[doc = "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
-    pub fn ports(&self) -> terrars::ListRef<ImagePortsElRef> {
+    pub fn ports(&self) -> terrars::ListRef<Image_PortsRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.ports", self.extract_ref()))
     }
 
@@ -740,13 +742,13 @@ impl ImageRef {
 }
 
 #[derive(Serialize)]
-pub struct ImageDirsEl {
+pub struct Image_Dirs {
     dest: terrars::PrimField<std::string::String>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     mode: std::option::Option<terrars::PrimField<std::string::String>>,
 }
 
-impl ImageDirsEl {
+impl Image_Dirs {
     #[doc = "Set the field `mode`.\nFile mode in octal, defaults to 0755"]
     pub fn set_mode(mut self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.mode = std::option::Option::Some(v.into());
@@ -754,8 +756,8 @@ impl ImageDirsEl {
     }
 }
 
-impl terrars::ToListMappable for ImageDirsEl {
-    type O = terrars::BlockAssignable<ImageDirsEl>;
+impl terrars::ToListMappable for Image_Dirs {
+    type O = terrars::BlockAssignable<Image_Dirs>;
 
     fn do_map(self, base: std::string::String) -> Self::O {
         terrars::BlockAssignable::Dynamic(terrars::DynamicBlock {
@@ -766,35 +768,37 @@ impl terrars::ToListMappable for ImageDirsEl {
     }
 }
 
-pub struct BuildImageDirsEl {
+pub struct BuildImage_Dirs {
     #[doc = "Where to create the dir in the image"]
     pub dest: terrars::PrimField<std::string::String>,
 }
 
-impl BuildImageDirsEl {
-    pub fn build(self) -> ImageDirsEl {
-        ImageDirsEl {
+impl BuildImage_Dirs {
+    pub fn build(self) -> Image_Dirs {
+        Image_Dirs {
             dest: self.dest,
             mode: core::default::Default::default(),
         }
     }
 }
 
-pub struct ImageDirsElRef {
+#[allow(dead_code)]
+pub struct Image_DirsRef {
     shared: terrars::StackShared,
     base: std::string::String,
 }
 
-impl terrars::Ref for ImageDirsElRef {
-    fn new(shared: terrars::StackShared, base: std::string::String) -> ImageDirsElRef {
-        ImageDirsElRef {
+impl terrars::Ref for Image_DirsRef {
+    fn new(shared: terrars::StackShared, base: std::string::String) -> Image_DirsRef {
+        Image_DirsRef {
             shared: shared,
             base: base.to_string(),
         }
     }
 }
 
-impl ImageDirsElRef {
+impl Image_DirsRef {
+    #[allow(dead_code)]
     fn shared(&self) -> &terrars::StackShared {
         &self.shared
     }
@@ -811,7 +815,7 @@ impl ImageDirsElRef {
 }
 
 #[derive(Serialize)]
-pub struct ImageFilesEl {
+pub struct Image_Files {
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     dest: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
@@ -819,7 +823,7 @@ pub struct ImageFilesEl {
     source: terrars::PrimField<std::string::String>,
 }
 
-impl ImageFilesEl {
+impl Image_Files {
     #[doc =
         "Set the field `dest`.\nWhere to place the file in the image; defaults to filename of source in image root"]
     pub fn set_dest(mut self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
@@ -834,8 +838,8 @@ impl ImageFilesEl {
     }
 }
 
-impl terrars::ToListMappable for ImageFilesEl {
-    type O = terrars::BlockAssignable<ImageFilesEl>;
+impl terrars::ToListMappable for Image_Files {
+    type O = terrars::BlockAssignable<Image_Files>;
 
     fn do_map(self, base: std::string::String) -> Self::O {
         terrars::BlockAssignable::Dynamic(terrars::DynamicBlock {
@@ -846,14 +850,14 @@ impl terrars::ToListMappable for ImageFilesEl {
     }
 }
 
-pub struct BuildImageFilesEl {
+pub struct BuildImage_Files {
     #[doc = "Local file to include in image"]
     pub source: terrars::PrimField<std::string::String>,
 }
 
-impl BuildImageFilesEl {
-    pub fn build(self) -> ImageFilesEl {
-        ImageFilesEl {
+impl BuildImage_Files {
+    pub fn build(self) -> Image_Files {
+        Image_Files {
             dest: core::default::Default::default(),
             mode: core::default::Default::default(),
             source: self.source,
@@ -861,21 +865,23 @@ impl BuildImageFilesEl {
     }
 }
 
-pub struct ImageFilesElRef {
+#[allow(dead_code)]
+pub struct Image_FilesRef {
     shared: terrars::StackShared,
     base: std::string::String,
 }
 
-impl terrars::Ref for ImageFilesElRef {
-    fn new(shared: terrars::StackShared, base: std::string::String) -> ImageFilesElRef {
-        ImageFilesElRef {
+impl terrars::Ref for Image_FilesRef {
+    fn new(shared: terrars::StackShared, base: std::string::String) -> Image_FilesRef {
+        Image_FilesRef {
             shared: shared,
             base: base.to_string(),
         }
     }
 }
 
-impl ImageFilesElRef {
+impl Image_FilesRef {
+    #[allow(dead_code)]
     fn shared(&self) -> &terrars::StackShared {
         &self.shared
     }
@@ -898,13 +904,13 @@ impl ImageFilesElRef {
 }
 
 #[derive(Serialize)]
-pub struct ImagePortsEl {
+pub struct Image_Ports {
     port: terrars::PrimField<f64>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     transport: std::option::Option<terrars::PrimField<std::string::String>>,
 }
 
-impl ImagePortsEl {
+impl Image_Ports {
     #[doc = "Set the field `transport`.\nPort protocol (`tcp`), defaults to `tcp`"]
     pub fn set_transport(mut self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.transport = std::option::Option::Some(v.into());
@@ -912,8 +918,8 @@ impl ImagePortsEl {
     }
 }
 
-impl terrars::ToListMappable for ImagePortsEl {
-    type O = terrars::BlockAssignable<ImagePortsEl>;
+impl terrars::ToListMappable for Image_Ports {
+    type O = terrars::BlockAssignable<Image_Ports>;
 
     fn do_map(self, base: std::string::String) -> Self::O {
         terrars::BlockAssignable::Dynamic(terrars::DynamicBlock {
@@ -924,35 +930,37 @@ impl terrars::ToListMappable for ImagePortsEl {
     }
 }
 
-pub struct BuildImagePortsEl {
+pub struct BuildImage_Ports {
     #[doc = "Internal port to make available"]
     pub port: terrars::PrimField<f64>,
 }
 
-impl BuildImagePortsEl {
-    pub fn build(self) -> ImagePortsEl {
-        ImagePortsEl {
+impl BuildImage_Ports {
+    pub fn build(self) -> Image_Ports {
+        Image_Ports {
             port: self.port,
             transport: core::default::Default::default(),
         }
     }
 }
 
-pub struct ImagePortsElRef {
+#[allow(dead_code)]
+pub struct Image_PortsRef {
     shared: terrars::StackShared,
     base: std::string::String,
 }
 
-impl terrars::Ref for ImagePortsElRef {
-    fn new(shared: terrars::StackShared, base: std::string::String) -> ImagePortsElRef {
-        ImagePortsElRef {
+impl terrars::Ref for Image_PortsRef {
+    fn new(shared: terrars::StackShared, base: std::string::String) -> Image_PortsRef {
+        Image_PortsRef {
             shared: shared,
             base: base.to_string(),
         }
     }
 }
 
-impl ImagePortsElRef {
+impl Image_PortsRef {
+    #[allow(dead_code)]
     fn shared(&self) -> &terrars::StackShared {
         &self.shared
     }
