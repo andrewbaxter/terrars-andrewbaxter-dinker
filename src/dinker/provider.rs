@@ -31,7 +31,8 @@ impl ProviderDinker {
         self
     }
 
-    #[doc = "Set the field `cache_dir`.\nCache intermediate build files (namely FROM images)"]
+    #[doc =
+        "Set the field `cache_dir`.\nWhere to cache base images pulled from registries, as an OCI layout keyed by digest. Defaults to `dinker` in the user cache directory (like `~/.cache/dinker`); if the system has none, nothing is cached."]
     pub fn set_cache_dir(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.0.data.borrow_mut().cache_dir = std::option::Option::Some(v.into());
         self
@@ -46,7 +47,7 @@ impl terrars::Provider for ProviderDinker_ {
     fn extract_provider_type(&self) -> serde_json::Value {
         serde_json::json!({
             "source": "andrewbaxter/dinker",
-            "version": "0.0.24",
+            "version": "0.1.0",
         })
     }
 

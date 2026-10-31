@@ -25,6 +25,8 @@ struct ImageData_ {
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     arch: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
+    build: std::option::Option<Image_Build>,
+    #[serde(skip_serializing_if = "std::option::Option::is_none")]
     clear_env: std::option::Option<terrars::PrimField<bool>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     cmd: std::option::Option<terrars::ListField<terrars::PrimField<std::string::String>>>,
@@ -56,6 +58,8 @@ struct ImageData_ {
     from_user: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     labels: std::option::Option<terrars::RecField<terrars::PrimField<std::string::String>>>,
+    #[serde(skip_serializing_if = "std::option::Option::is_none")]
+    manifest_format: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
     os: std::option::Option<terrars::PrimField<std::string::String>>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
@@ -171,7 +175,8 @@ impl Image {
         self
     }
 
-    #[doc = "Set the field `add_env`.\nAdd these environment variables when running command in container"]
+    #[doc =
+        "Set the field `add_env`.\nAdd these environment variables when running command in container, replacing inherited variables with the same name"]
     pub fn set_add_env(
         self,
         v: impl std::convert::Into<terrars::RecField<terrars::PrimField<std::string::String>>>,
@@ -180,19 +185,28 @@ impl Image {
         self
     }
 
-    #[doc = "Set the field `arch`.\nDefaults to `from` image architecture. Required if `from` omitted."]
+    #[doc =
+        "Set the field `arch`.\nDefaults to `from` image architecture. Required if `from` omitted. Chooses the image when `from` has several platforms; may include a variant, like `arm/v7`."]
     pub fn set_arch(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.0.data.borrow_mut().arch = std::option::Option::Some(v.into());
         self
     }
 
-    #[doc = "Set the field `clear_env`.\nUser to use if pushing generated image to remote"]
+    #[doc =
+        "Set the field `build`.\nA command that produces the `files`, such as a compiler. It runs during apply, right before the image is built. With `build`, change detection hashes `sources` at plan time instead of `files`, so the image is only rebuilt (and the command only run) when sources change. This means a fresh CI checkout, where the build outputs don't exist yet, doesn't rebuild an image that's already pushed."]
+    pub fn set_build(self, v: impl std::convert::Into<Image_Build>) -> Self {
+        self.0.data.borrow_mut().build = std::option::Option::Some(v.into());
+        self
+    }
+
+    #[doc = "Set the field `clear_env`.\nDon't inherit environment variables from the FROM image"]
     pub fn set_clear_env(self, v: impl std::convert::Into<terrars::PrimField<bool>>) -> Self {
         self.0.data.borrow_mut().clear_env = std::option::Option::Some(v.into());
         self
     }
 
-    #[doc = "Set the field `cmd`.\nOverridable command parts, concatenated after `entrypoint`"]
+    #[doc =
+        "Set the field `cmd`.\nOverridable command parts, concatenated after `entrypoint`. Not inherited from the FROM image."]
     pub fn set_cmd(
         self,
         v: impl std::convert::Into<terrars::ListField<terrars::PrimField<std::string::String>>>,
@@ -220,7 +234,8 @@ impl Image {
         self
     }
 
-    #[doc = "Set the field `dest_user`.\nUser to use if pushing generated image to remote"]
+    #[doc =
+        "Set the field `dest_user`.\nUser to use if pushing generated image to remote. If neither this nor `dest_password` is set, the standard Docker config is used."]
     pub fn set_dest_user(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.0.data.borrow_mut().dest_user = std::option::Option::Some(v.into());
         self
@@ -233,7 +248,8 @@ impl Image {
         self
     }
 
-    #[doc = "Set the field `entrypoint`.\nUn-overridable command parts, concatenated before `cmd`"]
+    #[doc =
+        "Set the field `entrypoint`.\nUn-overridable command parts, concatenated before `cmd`. Not inherited from the FROM image."]
     pub fn set_entrypoint(
         self,
         v: impl std::convert::Into<terrars::ListField<terrars::PrimField<std::string::String>>>,
@@ -243,14 +259,14 @@ impl Image {
     }
 
     #[doc =
-        "Set the field `from`.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer. This is cached and will only be downloaded once (unless the specifier changes or from_hash is explicitly set to a new value)."]
+        "Set the field `from`.\nImage to base the generated image on. Uses containers-transports syntax: `docker://host/repo:tag` (registry), `docker-daemon:repo:tag`, `oci:path[:tag]`, `oci-archive:path[:tag]` or `docker-archive:path[:repo:tag]`. If not specified, has no base layer. The reference is resolved to a digest at plan time, so the image is rebuilt when a tag moves. Registry images are cached by digest."]
     pub fn set_from(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.0.data.borrow_mut().from = std::option::Option::Some(v.into());
         self
     }
 
     #[doc =
-        "Set the field `from_hash`.\nHash representing the contents of the FROM image, to force re-download even if the specifier doesn't change."]
+        "Set the field `from_hash`.\nChanging this forces a rebuild. No longer needed for tag updates, since `from` is resolved to a digest at plan time."]
     pub fn set_from_hash(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.0.data.borrow_mut().from_hash = std::option::Option::Some(v.into());
         self
@@ -275,13 +291,14 @@ impl Image {
         self
     }
 
-    #[doc = "Set the field `from_user`.\nUser to use if pulling FROM image from remote"]
+    #[doc =
+        "Set the field `from_user`.\nUser to use if pulling FROM image from remote. If neither this nor `from_password` is set, the standard Docker config is used."]
     pub fn set_from_user(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.0.data.borrow_mut().from_user = std::option::Option::Some(v.into());
         self
     }
 
-    #[doc = "Set the field `labels`.\nMetadata to attach to image"]
+    #[doc = "Set the field `labels`.\nMetadata to attach to image. Not inherited from the FROM image."]
     pub fn set_labels(
         self,
         v: impl std::convert::Into<terrars::RecField<terrars::PrimField<std::string::String>>>,
@@ -290,19 +307,28 @@ impl Image {
         self
     }
 
-    #[doc = "Set the field `os`.\nDefaults to `from` image os. Required if `from` omitted."]
+    #[doc =
+        "Set the field `manifest_format`.\n`oci` (the default) or `docker`. Base image layers are converted to match."]
+    pub fn set_manifest_format(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
+        self.0.data.borrow_mut().manifest_format = std::option::Option::Some(v.into());
+        self
+    }
+
+    #[doc =
+        "Set the field `os`.\nDefaults to `from` image os. Required if `from` omitted. Chooses the image when `from` has several platforms."]
     pub fn set_os(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.0.data.borrow_mut().os = std::option::Option::Some(v.into());
         self
     }
 
-    #[doc = "Set the field `ports`.\nContainer ports to expose"]
+    #[doc = "Set the field `ports`.\nContainer ports to expose. Not inherited from the FROM image."]
     pub fn set_ports(self, v: impl std::convert::Into<std::vec::Vec<Image_Ports>>) -> Self {
         self.0.data.borrow_mut().ports = std::option::Option::Some(v.into());
         self
     }
 
-    #[doc = "Set the field `stop_signal`.\nSignal to use to stop command in container when shutting down"]
+    #[doc =
+        "Set the field `stop_signal`.\nSignal to use to stop command in container when shutting down. Not inherited from the FROM image."]
     pub fn set_stop_signal(self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.0.data.borrow_mut().stop_signal = std::option::Option::Some(v.into());
         self
@@ -321,31 +347,37 @@ impl Image {
     }
 
     #[doc =
-        "Get a reference to the value of field `add_env` after provisioning.\nAdd these environment variables when running command in container"]
+        "Get a reference to the value of field `add_env` after provisioning.\nAdd these environment variables when running command in container, replacing inherited variables with the same name"]
     pub fn add_env(&self) -> terrars::RecRef<terrars::PrimExpr<std::string::String>> {
         terrars::RecRef::new(self.shared().clone(), format!("{}.add_env", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `arch` after provisioning.\nDefaults to `from` image architecture. Required if `from` omitted."]
+        "Get a reference to the value of field `arch` after provisioning.\nDefaults to `from` image architecture. Required if `from` omitted. Chooses the image when `from` has several platforms; may include a variant, like `arm/v7`."]
     pub fn arch(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.arch", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `clear_env` after provisioning.\nUser to use if pushing generated image to remote"]
+        "Get a reference to the value of field `build` after provisioning.\nA command that produces the `files`, such as a compiler. It runs during apply, right before the image is built. With `build`, change detection hashes `sources` at plan time instead of `files`, so the image is only rebuilt (and the command only run) when sources change. This means a fresh CI checkout, where the build outputs don't exist yet, doesn't rebuild an image that's already pushed."]
+    pub fn build(&self) -> Image_BuildRef {
+        Image_BuildRef::new(self.shared().clone(), format!("{}.build", self.extract_ref()))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `clear_env` after provisioning.\nDon't inherit environment variables from the FROM image"]
     pub fn clear_env(&self) -> terrars::PrimExpr<bool> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.clear_env", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `cmd` after provisioning.\nOverridable command parts, concatenated after `entrypoint`"]
+        "Get a reference to the value of field `cmd` after provisioning.\nOverridable command parts, concatenated after `entrypoint`. Not inherited from the FROM image."]
     pub fn cmd(&self) -> terrars::ListRef<terrars::PrimExpr<std::string::String>> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.cmd", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `dest` after provisioning.\nWhere to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
+        "Get a reference to the value of field `dest` after provisioning.\nWhere to send the generated image. Uses containers-transports syntax: `docker://host/repo:tag` (registry), `docker-daemon:repo:tag`, `oci:path[:tag]`, `oci-archive:path[:tag]` or `docker-archive:path[:repo:tag]`. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - The hex sha256 digest of the image manifest (the same digest registries show).\n\n* `{short_hash}` - The first 8 hex digits of the hash"]
     pub fn dest(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.dest", self.extract_ref()))
     }
@@ -368,7 +400,7 @@ impl Image {
     }
 
     #[doc =
-        "Get a reference to the value of field `dest_user` after provisioning.\nUser to use if pushing generated image to remote"]
+        "Get a reference to the value of field `dest_user` after provisioning.\nUser to use if pushing generated image to remote. If neither this nor `dest_password` is set, the standard Docker config is used."]
     pub fn dest_user(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.dest_user", self.extract_ref()))
     }
@@ -380,30 +412,37 @@ impl Image {
     }
 
     #[doc =
-        "Get a reference to the value of field `entrypoint` after provisioning.\nUn-overridable command parts, concatenated before `cmd`"]
+        "Get a reference to the value of field `entrypoint` after provisioning.\nUn-overridable command parts, concatenated before `cmd`. Not inherited from the FROM image."]
     pub fn entrypoint(&self) -> terrars::ListRef<terrars::PrimExpr<std::string::String>> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.entrypoint", self.extract_ref()))
     }
 
-    #[doc = "Get a reference to the value of field `files` after provisioning.\nFiles to add to image"]
+    #[doc =
+        "Get a reference to the value of field `files` after provisioning.\nFiles to add to image. Only regular files are supported, and they are owned by root. Missing parent directories are created with mode 755."]
     pub fn files(&self) -> terrars::ListRef<Image_FilesRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.files", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `files_hash` after provisioning.\nA hash of the input files, before building the image"]
+        "Get a reference to the value of field `files_hash` after provisioning.\nA hash of the input files. Without `build`, it's computed at plan time and a change forces a rebuild. With `build`, it's recorded after the build command runs."]
     pub fn files_hash(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.files_hash", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer. This is cached and will only be downloaded once (unless the specifier changes or from_hash is explicitly set to a new value)."]
+        "Get a reference to the value of field `from` after provisioning.\nImage to base the generated image on. Uses containers-transports syntax: `docker://host/repo:tag` (registry), `docker-daemon:repo:tag`, `oci:path[:tag]`, `oci-archive:path[:tag]` or `docker-archive:path[:repo:tag]`. If not specified, has no base layer. The reference is resolved to a digest at plan time, so the image is rebuilt when a tag moves. Registry images are cached by digest."]
     pub fn from(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.from", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `from_hash` after provisioning.\nHash representing the contents of the FROM image, to force re-download even if the specifier doesn't change."]
+        "Get a reference to the value of field `from_digest` after provisioning.\nWhat `from` resolved to at plan time: the manifest digest for registry and `oci` refs, the file hash for archives, or the image ID for `docker-daemon`. A change forces a rebuild."]
+    pub fn from_digest(&self) -> terrars::PrimExpr<std::string::String> {
+        terrars::PrimExpr::new(self.shared().clone(), format!("{}.from_digest", self.extract_ref()))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `from_hash` after provisioning.\nChanging this forces a rebuild. No longer needed for tag updates, since `from` is resolved to a digest at plan time."]
     pub fn from_hash(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.from_hash", self.extract_ref()))
     }
@@ -426,7 +465,7 @@ impl Image {
     }
 
     #[doc =
-        "Get a reference to the value of field `from_user` after provisioning.\nUser to use if pulling FROM image from remote"]
+        "Get a reference to the value of field `from_user` after provisioning.\nUser to use if pulling FROM image from remote. If neither this nor `from_password` is set, the standard Docker config is used."]
     pub fn from_user(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.from_user", self.extract_ref()))
     }
@@ -437,18 +476,26 @@ impl Image {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.hash", self.extract_ref()))
     }
 
-    #[doc = "Get a reference to the value of field `labels` after provisioning.\nMetadata to attach to image"]
+    #[doc =
+        "Get a reference to the value of field `labels` after provisioning.\nMetadata to attach to image. Not inherited from the FROM image."]
     pub fn labels(&self) -> terrars::RecRef<terrars::PrimExpr<std::string::String>> {
         terrars::RecRef::new(self.shared().clone(), format!("{}.labels", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `os` after provisioning.\nDefaults to `from` image os. Required if `from` omitted."]
+        "Get a reference to the value of field `manifest_format` after provisioning.\n`oci` (the default) or `docker`. Base image layers are converted to match."]
+    pub fn manifest_format(&self) -> terrars::PrimExpr<std::string::String> {
+        terrars::PrimExpr::new(self.shared().clone(), format!("{}.manifest_format", self.extract_ref()))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `os` after provisioning.\nDefaults to `from` image os. Required if `from` omitted. Chooses the image when `from` has several platforms."]
     pub fn os(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.os", self.extract_ref()))
     }
 
-    #[doc = "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
+    #[doc =
+        "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose. Not inherited from the FROM image."]
     pub fn ports(&self) -> terrars::ListRef<Image_PortsRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.ports", self.extract_ref()))
     }
@@ -460,7 +507,13 @@ impl Image {
     }
 
     #[doc =
-        "Get a reference to the value of field `stop_signal` after provisioning.\nSignal to use to stop command in container when shutting down"]
+        "Get a reference to the value of field `sources_hash` after provisioning.\nWith `build`, a hash of the `sources`, computed at plan time. A change forces a rebuild."]
+    pub fn sources_hash(&self) -> terrars::PrimExpr<std::string::String> {
+        terrars::PrimExpr::new(self.shared().clone(), format!("{}.sources_hash", self.extract_ref()))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `stop_signal` after provisioning.\nSignal to use to stop command in container when shutting down. Not inherited from the FROM image."]
     pub fn stop_signal(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.stop_signal", self.extract_ref()))
     }
@@ -512,9 +565,10 @@ impl terrars::Resource_ for Image_ {
 pub struct BuildImage {
     pub tf_id: std::string::String,
     #[doc =
-        "Where to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
+        "Where to send the generated image. Uses containers-transports syntax: `docker://host/repo:tag` (registry), `docker-daemon:repo:tag`, `oci:path[:tag]`, `oci-archive:path[:tag]` or `docker-archive:path[:repo:tag]`. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - The hex sha256 digest of the image manifest (the same digest registries show).\n\n* `{short_hash}` - The first 8 hex digits of the hash"]
     pub dest: terrars::PrimField<std::string::String>,
-    #[doc = "Files to add to image"]
+    #[doc =
+        "Files to add to image. Only regular files are supported, and they are owned by root. Missing parent directories are created with mode 755."]
     pub files: std::vec::Vec<Image_Files>,
 }
 
@@ -531,6 +585,7 @@ impl BuildImage {
                 provisioner: core::default::Default::default(),
                 add_env: core::default::Default::default(),
                 arch: core::default::Default::default(),
+                build: core::default::Default::default(),
                 clear_env: core::default::Default::default(),
                 cmd: core::default::Default::default(),
                 dest: self.dest,
@@ -548,6 +603,7 @@ impl BuildImage {
                 from_password: core::default::Default::default(),
                 from_user: core::default::Default::default(),
                 labels: core::default::Default::default(),
+                manifest_format: core::default::Default::default(),
                 os: core::default::Default::default(),
                 ports: core::default::Default::default(),
                 stop_signal: core::default::Default::default(),
@@ -584,31 +640,37 @@ impl ImageRef {
     }
 
     #[doc =
-        "Get a reference to the value of field `add_env` after provisioning.\nAdd these environment variables when running command in container"]
+        "Get a reference to the value of field `add_env` after provisioning.\nAdd these environment variables when running command in container, replacing inherited variables with the same name"]
     pub fn add_env(&self) -> terrars::RecRef<terrars::PrimExpr<std::string::String>> {
         terrars::RecRef::new(self.shared().clone(), format!("{}.add_env", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `arch` after provisioning.\nDefaults to `from` image architecture. Required if `from` omitted."]
+        "Get a reference to the value of field `arch` after provisioning.\nDefaults to `from` image architecture. Required if `from` omitted. Chooses the image when `from` has several platforms; may include a variant, like `arm/v7`."]
     pub fn arch(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.arch", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `clear_env` after provisioning.\nUser to use if pushing generated image to remote"]
+        "Get a reference to the value of field `build` after provisioning.\nA command that produces the `files`, such as a compiler. It runs during apply, right before the image is built. With `build`, change detection hashes `sources` at plan time instead of `files`, so the image is only rebuilt (and the command only run) when sources change. This means a fresh CI checkout, where the build outputs don't exist yet, doesn't rebuild an image that's already pushed."]
+    pub fn build(&self) -> Image_BuildRef {
+        Image_BuildRef::new(self.shared().clone(), format!("{}.build", self.extract_ref()))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `clear_env` after provisioning.\nDon't inherit environment variables from the FROM image"]
     pub fn clear_env(&self) -> terrars::PrimExpr<bool> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.clear_env", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `cmd` after provisioning.\nOverridable command parts, concatenated after `entrypoint`"]
+        "Get a reference to the value of field `cmd` after provisioning.\nOverridable command parts, concatenated after `entrypoint`. Not inherited from the FROM image."]
     pub fn cmd(&self) -> terrars::ListRef<terrars::PrimExpr<std::string::String>> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.cmd", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `dest` after provisioning.\nWhere to send generated image; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - A sha256 sum of all the information used to generate the image (note: this should be stable but has no formal specification and is unrelated to the pushed manifest hash).\n\n* `{short_hash}` - The first hex digits of the hash"]
+        "Get a reference to the value of field `dest` after provisioning.\nWhere to send the generated image. Uses containers-transports syntax: `docker://host/repo:tag` (registry), `docker-daemon:repo:tag`, `oci:path[:tag]`, `oci-archive:path[:tag]` or `docker-archive:path[:repo:tag]`. This is a pattern - you can add the following strings which will be replaced with generated information:\n\n* `{hash}` - The hex sha256 digest of the image manifest (the same digest registries show).\n\n* `{short_hash}` - The first 8 hex digits of the hash"]
     pub fn dest(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.dest", self.extract_ref()))
     }
@@ -631,7 +693,7 @@ impl ImageRef {
     }
 
     #[doc =
-        "Get a reference to the value of field `dest_user` after provisioning.\nUser to use if pushing generated image to remote"]
+        "Get a reference to the value of field `dest_user` after provisioning.\nUser to use if pushing generated image to remote. If neither this nor `dest_password` is set, the standard Docker config is used."]
     pub fn dest_user(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.dest_user", self.extract_ref()))
     }
@@ -643,30 +705,37 @@ impl ImageRef {
     }
 
     #[doc =
-        "Get a reference to the value of field `entrypoint` after provisioning.\nUn-overridable command parts, concatenated before `cmd`"]
+        "Get a reference to the value of field `entrypoint` after provisioning.\nUn-overridable command parts, concatenated before `cmd`. Not inherited from the FROM image."]
     pub fn entrypoint(&self) -> terrars::ListRef<terrars::PrimExpr<std::string::String>> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.entrypoint", self.extract_ref()))
     }
 
-    #[doc = "Get a reference to the value of field `files` after provisioning.\nFiles to add to image"]
+    #[doc =
+        "Get a reference to the value of field `files` after provisioning.\nFiles to add to image. Only regular files are supported, and they are owned by root. Missing parent directories are created with mode 755."]
     pub fn files(&self) -> terrars::ListRef<Image_FilesRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.files", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `files_hash` after provisioning.\nA hash of the input files, before building the image"]
+        "Get a reference to the value of field `files_hash` after provisioning.\nA hash of the input files. Without `build`, it's computed at plan time and a change forces a rebuild. With `build`, it's recorded after the build command runs."]
     pub fn files_hash(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.files_hash", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `from` after provisioning.\nFROM image to base generated image on; skopeo-style reference, see <https://github.com/containers/image/blob/main/docs/containers-transports.5.md> for a full list. If not specified, has no base layer. This is cached and will only be downloaded once (unless the specifier changes or from_hash is explicitly set to a new value)."]
+        "Get a reference to the value of field `from` after provisioning.\nImage to base the generated image on. Uses containers-transports syntax: `docker://host/repo:tag` (registry), `docker-daemon:repo:tag`, `oci:path[:tag]`, `oci-archive:path[:tag]` or `docker-archive:path[:repo:tag]`. If not specified, has no base layer. The reference is resolved to a digest at plan time, so the image is rebuilt when a tag moves. Registry images are cached by digest."]
     pub fn from(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.from", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `from_hash` after provisioning.\nHash representing the contents of the FROM image, to force re-download even if the specifier doesn't change."]
+        "Get a reference to the value of field `from_digest` after provisioning.\nWhat `from` resolved to at plan time: the manifest digest for registry and `oci` refs, the file hash for archives, or the image ID for `docker-daemon`. A change forces a rebuild."]
+    pub fn from_digest(&self) -> terrars::PrimExpr<std::string::String> {
+        terrars::PrimExpr::new(self.shared().clone(), format!("{}.from_digest", self.extract_ref()))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `from_hash` after provisioning.\nChanging this forces a rebuild. No longer needed for tag updates, since `from` is resolved to a digest at plan time."]
     pub fn from_hash(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.from_hash", self.extract_ref()))
     }
@@ -689,7 +758,7 @@ impl ImageRef {
     }
 
     #[doc =
-        "Get a reference to the value of field `from_user` after provisioning.\nUser to use if pulling FROM image from remote"]
+        "Get a reference to the value of field `from_user` after provisioning.\nUser to use if pulling FROM image from remote. If neither this nor `from_password` is set, the standard Docker config is used."]
     pub fn from_user(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.from_user", self.extract_ref()))
     }
@@ -700,18 +769,26 @@ impl ImageRef {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.hash", self.extract_ref()))
     }
 
-    #[doc = "Get a reference to the value of field `labels` after provisioning.\nMetadata to attach to image"]
+    #[doc =
+        "Get a reference to the value of field `labels` after provisioning.\nMetadata to attach to image. Not inherited from the FROM image."]
     pub fn labels(&self) -> terrars::RecRef<terrars::PrimExpr<std::string::String>> {
         terrars::RecRef::new(self.shared().clone(), format!("{}.labels", self.extract_ref()))
     }
 
     #[doc =
-        "Get a reference to the value of field `os` after provisioning.\nDefaults to `from` image os. Required if `from` omitted."]
+        "Get a reference to the value of field `manifest_format` after provisioning.\n`oci` (the default) or `docker`. Base image layers are converted to match."]
+    pub fn manifest_format(&self) -> terrars::PrimExpr<std::string::String> {
+        terrars::PrimExpr::new(self.shared().clone(), format!("{}.manifest_format", self.extract_ref()))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `os` after provisioning.\nDefaults to `from` image os. Required if `from` omitted. Chooses the image when `from` has several platforms."]
     pub fn os(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.os", self.extract_ref()))
     }
 
-    #[doc = "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose"]
+    #[doc =
+        "Get a reference to the value of field `ports` after provisioning.\nContainer ports to expose. Not inherited from the FROM image."]
     pub fn ports(&self) -> terrars::ListRef<Image_PortsRef> {
         terrars::ListRef::new(self.shared().clone(), format!("{}.ports", self.extract_ref()))
     }
@@ -723,7 +800,13 @@ impl ImageRef {
     }
 
     #[doc =
-        "Get a reference to the value of field `stop_signal` after provisioning.\nSignal to use to stop command in container when shutting down"]
+        "Get a reference to the value of field `sources_hash` after provisioning.\nWith `build`, a hash of the `sources`, computed at plan time. A change forces a rebuild."]
+    pub fn sources_hash(&self) -> terrars::PrimExpr<std::string::String> {
+        terrars::PrimExpr::new(self.shared().clone(), format!("{}.sources_hash", self.extract_ref()))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `stop_signal` after provisioning.\nSignal to use to stop command in container when shutting down. Not inherited from the FROM image."]
     pub fn stop_signal(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.stop_signal", self.extract_ref()))
     }
@@ -742,6 +825,113 @@ impl ImageRef {
 }
 
 #[derive(Serialize)]
+pub struct Image_Build {
+    command: terrars::ListField<terrars::PrimField<std::string::String>>,
+    #[serde(skip_serializing_if = "std::option::Option::is_none")]
+    dir: std::option::Option<terrars::PrimField<std::string::String>>,
+    #[serde(skip_serializing_if = "std::option::Option::is_none")]
+    env: std::option::Option<terrars::RecField<terrars::PrimField<std::string::String>>>,
+    sources: terrars::ListField<terrars::PrimField<std::string::String>>,
+}
+
+impl Image_Build {
+    #[doc =
+        "Set the field `dir`.\nWorking directory for the command, and the base for `sources`. Defaults to the directory Terraform runs in; `path.module` is usually what you want."]
+    pub fn set_dir(mut self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
+        self.dir = std::option::Option::Some(v.into());
+        self
+    }
+
+    #[doc =
+        "Set the field `env`.\nEnvironment variables to add for the command. The rest of Terraform's environment is inherited."]
+    pub fn set_env(
+        mut self,
+        v: impl std::convert::Into<terrars::RecField<terrars::PrimField<std::string::String>>>,
+    ) -> Self {
+        self.env = std::option::Option::Some(v.into());
+        self
+    }
+}
+
+impl terrars::ToListMappable for Image_Build {
+    type O = terrars::BlockAssignable<Image_Build>;
+
+    fn do_map(self, base: std::string::String) -> Self::O {
+        terrars::BlockAssignable::Dynamic(terrars::DynamicBlock {
+            for_each: format!("${{{}}}", base),
+            iterator: "each".into(),
+            content: self,
+        })
+    }
+}
+
+pub struct BuildImage_Build {
+    #[doc =
+        "The program and its arguments. It isn't run through a shell; use `[\"sh\", \"-c\", \"...\"]` for shell syntax."]
+    pub command: terrars::ListField<terrars::PrimField<std::string::String>>,
+    #[doc =
+        "Files whose contents decide whether to rebuild, as `/`-separated globs relative to `dir`. `*`, `?` and `[...]` match within a path segment, `**` matches any number of directories, and a leading `!` excludes files matched by earlier patterns. Each include pattern must match at least one file. List every input of the build, plus any non-generated files in `files`."]
+    pub sources: terrars::ListField<terrars::PrimField<std::string::String>>,
+}
+
+impl BuildImage_Build {
+    pub fn build(self) -> Image_Build {
+        Image_Build {
+            command: self.command,
+            dir: core::default::Default::default(),
+            env: core::default::Default::default(),
+            sources: self.sources,
+        }
+    }
+}
+
+#[allow(dead_code)]
+pub struct Image_BuildRef {
+    shared: terrars::StackShared,
+    base: std::string::String,
+}
+
+impl terrars::Ref for Image_BuildRef {
+    fn new(shared: terrars::StackShared, base: std::string::String) -> Image_BuildRef {
+        Image_BuildRef {
+            shared: shared,
+            base: base.to_string(),
+        }
+    }
+}
+
+impl Image_BuildRef {
+    #[allow(dead_code)]
+    fn shared(&self) -> &terrars::StackShared {
+        &self.shared
+    }
+
+    #[doc =
+        "Get a reference to the value of field `command` after provisioning.\nThe program and its arguments. It isn't run through a shell; use `[\"sh\", \"-c\", \"...\"]` for shell syntax."]
+    pub fn command(&self) -> terrars::ListRef<terrars::PrimExpr<std::string::String>> {
+        terrars::ListRef::new(self.shared().clone(), format!("{}.command", self.base))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `dir` after provisioning.\nWorking directory for the command, and the base for `sources`. Defaults to the directory Terraform runs in; `path.module` is usually what you want."]
+    pub fn dir(&self) -> terrars::PrimExpr<std::string::String> {
+        terrars::PrimExpr::new(self.shared().clone(), format!("{}.dir", self.base))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `env` after provisioning.\nEnvironment variables to add for the command. The rest of Terraform's environment is inherited."]
+    pub fn env(&self) -> terrars::RecRef<terrars::PrimExpr<std::string::String>> {
+        terrars::RecRef::new(self.shared().clone(), format!("{}.env", self.base))
+    }
+
+    #[doc =
+        "Get a reference to the value of field `sources` after provisioning.\nFiles whose contents decide whether to rebuild, as `/`-separated globs relative to `dir`. `*`, `?` and `[...]` match within a path segment, `**` matches any number of directories, and a leading `!` excludes files matched by earlier patterns. Each include pattern must match at least one file. List every input of the build, plus any non-generated files in `files`."]
+    pub fn sources(&self) -> terrars::ListRef<terrars::PrimExpr<std::string::String>> {
+        terrars::ListRef::new(self.shared().clone(), format!("{}.sources", self.base))
+    }
+}
+
+#[derive(Serialize)]
 pub struct Image_Dirs {
     dest: terrars::PrimField<std::string::String>,
     #[serde(skip_serializing_if = "std::option::Option::is_none")]
@@ -749,7 +939,7 @@ pub struct Image_Dirs {
 }
 
 impl Image_Dirs {
-    #[doc = "Set the field `mode`.\nFile mode in octal, defaults to 0755"]
+    #[doc = "Set the field `mode`.\nFile mode in octal, defaults to 755"]
     pub fn set_mode(mut self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.mode = std::option::Option::Some(v.into());
         self
@@ -769,7 +959,7 @@ impl terrars::ToListMappable for Image_Dirs {
 }
 
 pub struct BuildImage_Dirs {
-    #[doc = "Where to create the dir in the image"]
+    #[doc = "Absolute path of the dir in the image"]
     pub dest: terrars::PrimField<std::string::String>,
 }
 
@@ -803,12 +993,12 @@ impl Image_DirsRef {
         &self.shared
     }
 
-    #[doc = "Get a reference to the value of field `dest` after provisioning.\nWhere to create the dir in the image"]
+    #[doc = "Get a reference to the value of field `dest` after provisioning.\nAbsolute path of the dir in the image"]
     pub fn dest(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.dest", self.base))
     }
 
-    #[doc = "Get a reference to the value of field `mode` after provisioning.\nFile mode in octal, defaults to 0755"]
+    #[doc = "Get a reference to the value of field `mode` after provisioning.\nFile mode in octal, defaults to 755"]
     pub fn mode(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.mode", self.base))
     }
@@ -825,13 +1015,13 @@ pub struct Image_Files {
 
 impl Image_Files {
     #[doc =
-        "Set the field `dest`.\nWhere to place the file in the image; defaults to filename of source in image root"]
+        "Set the field `dest`.\nAbsolute path for the file in the image; defaults to the filename of source in the image root"]
     pub fn set_dest(mut self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.dest = std::option::Option::Some(v.into());
         self
     }
 
-    #[doc = "Set the field `mode`.\nFile mode in octal, defaults to 0644"]
+    #[doc = "Set the field `mode`.\nFile mode in octal, defaults to 644"]
     pub fn set_mode(mut self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.mode = std::option::Option::Some(v.into());
         self
@@ -887,12 +1077,12 @@ impl Image_FilesRef {
     }
 
     #[doc =
-        "Get a reference to the value of field `dest` after provisioning.\nWhere to place the file in the image; defaults to filename of source in image root"]
+        "Get a reference to the value of field `dest` after provisioning.\nAbsolute path for the file in the image; defaults to the filename of source in the image root"]
     pub fn dest(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.dest", self.base))
     }
 
-    #[doc = "Get a reference to the value of field `mode` after provisioning.\nFile mode in octal, defaults to 0644"]
+    #[doc = "Get a reference to the value of field `mode` after provisioning.\nFile mode in octal, defaults to 644"]
     pub fn mode(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.mode", self.base))
     }
@@ -911,7 +1101,7 @@ pub struct Image_Ports {
 }
 
 impl Image_Ports {
-    #[doc = "Set the field `transport`.\nPort protocol (`tcp`), defaults to `tcp`"]
+    #[doc = "Set the field `transport`.\nPort protocol: `tcp` (the default), `udp` or `sctp`"]
     pub fn set_transport(mut self, v: impl std::convert::Into<terrars::PrimField<std::string::String>>) -> Self {
         self.transport = std::option::Option::Some(v.into());
         self
@@ -971,7 +1161,7 @@ impl Image_PortsRef {
     }
 
     #[doc =
-        "Get a reference to the value of field `transport` after provisioning.\nPort protocol (`tcp`), defaults to `tcp`"]
+        "Get a reference to the value of field `transport` after provisioning.\nPort protocol: `tcp` (the default), `udp` or `sctp`"]
     pub fn transport(&self) -> terrars::PrimExpr<std::string::String> {
         terrars::PrimExpr::new(self.shared().clone(), format!("{}.transport", self.base))
     }

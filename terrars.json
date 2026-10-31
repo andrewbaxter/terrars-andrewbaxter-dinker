@@ -1,6 +1,6 @@
 {
     "provider": "andrewbaxter/dinker",
-    "version": "0.0.24",
+    "version": "0.1.0",
     "dest": "src/dinker",
 	"feature_gate": "Cargo.toml"
 }
